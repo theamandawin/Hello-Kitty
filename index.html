@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HELLO KITTY</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@400&display=swap">
+    <style>
+        body {
+            font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-image: url('chrome01.jpg');
+            background-size: cover;
+            color: #fff;
+            text-align: center;
+            padding: 200px;
+            margin: 0;
+        }
+
+        .gridContainer {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            max-width: 340px;
+            margin: 0 auto;
+        }
+
+        .button {
+            width: 100px;
+            height: 100px;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            border-radius: 10px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+
+        .button img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease-in-out;
+        }
+
+        #button1 {
+            background-color: rgb(103, 10, 136);
+        }
+
+        #button2 {
+            background-color: rgb(2, 0, 130);
+        }
+
+        #button3 {
+            background-color: rgb(53, 153, 215);
+        }
+
+        #button4 {
+            background-color: green;
+        }
+
+        #button5 {
+            background-color: rgb(255, 243, 8);
+        }
+
+        #button6 {
+            background-color: rgb(243, 125, 0);
+        }
+
+        #button7 {
+            background-color: rgb(221, 4, 4);
+        }
+
+        #button8 {
+            background-color: black;
+            border-color: white;
+            
+        }
+
+        #button9 {
+            background-color: white;
+        }
+
+        .button:hover {
+            background-color: #ffdb4d;
+            transform: scale(1.1);
+        }
+
+        .contentContainer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 100px;
+        }
+
+        #catLieContainer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1></h1>
+
+    <div class="gridContainer">
+        <div id="button1" class="button" onclick="fetchCatLie(1)"></div>
+        <div id="button2" class="button" onclick="fetchCatLie(2)"></div>
+        <div id="button3" class="button" onclick="fetchCatLie(3)"></div>
+        <div id="button4" class="button" onclick="fetchCatLie(4)"></div>
+        <div id="button5" class="button" onclick="fetchCatLie(5)"></div>
+        <div id="button6" class="button" onclick="fetchCatLie(6)"></div>
+        <div id="button7" class="button" onclick="fetchCatLie(7)"></div>
+        <div id="button8" class="button" onclick="fetchCatLie(8)"></div>
+        <div id="button9" class="button" onclick="fetchCatLie(9)"></div>
+    </div>
+
+    <div class="contentContainer">
+        <div id="catLieContainer"></div>
+    </div>
+
+    <script>
+        const catData = [
+            { image: 'Amanda-01.jpg', sound: '01.wav' },
+            { image: 'Amanda-02.jpg', sound: '02.wav' },
+            { image: 'Amanda-03.jpg', sound: '03.wav' },
+            { image: 'Amanda-04.jpg', sound: '04.wav' },
+            { image: 'Amanda-05.jpg', sound: '05.wav' },
+            { image: 'Amanda-06.jpg', sound: '06.wav' },
+            { image: 'Amanda-07.jpg', sound: '07.wav' },
+            { image: 'Amanda-08.jpg', sound: '08.wav' },
+            { image: 'Amanda-09.jpg', sound: '09.wav' },
+            // Add more data as needed
+        ];
+
+        const catSound = new Audio();
+
+        async function fetchCatLie(buttonNumber) {
+            const button = document.getElementById(`button${buttonNumber}`);
+            const catLieContainer = document.getElementById('catLieContainer');
+
+            catLieContainer.textContent = '';
+
+            try {
+                // Fetch a random cat lie
+                const response = await fetch('https://catliesapi.onrender.com/api/cat');
+                const data = await response.json();
+
+                if (response.ok) {
+                    const catLie = data.catLie;
+                    const catDataItem = catData[buttonNumber - 1];
+
+                    // Display the image with animation
+                    const catImage = document.createElement('img');
+                    catImage.src = catDataItem.image;
+                    catImage.alt = 'Random Cat';
+                    button.innerHTML = '';
+                    button.appendChild(catImage);
+                    setTimeout(() => {
+                        catImage.style.transform = 'scale(1)';
+                    }, 10);
+
+                    // Play cat sound
+                    catSound.src = catDataItem.sound;
+                    catSound.play();
+
+                    // Display the cat lie text
+                    catLieContainer.textContent = catLie;
+                } else {
+                    console.error(`Failed to fetch cat lie. Status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Error fetching cat lie:', error.message);
+            }
+        }
+    </script>
+</body>
+</html>
